@@ -1,0 +1,27 @@
+extends ../layouts/layout.pug
+
+block content
+  h1 Mijn favoriete films
+  p Hier vind je al je favoriete films.
+  .container
+    if favoriteMovies && favoriteMovies.length > 0
+      .row
+        each movie in favoriteMovies
+          .col-6.col-md-3.text-center
+            .movie-block
+              a(href=`/movies/${movie.film_id}`)
+                img(
+                  src=movie.imageUrl ? movie.imageUrl : "/images/filmfoto.jpg",
+                  alt=movie.film_title,
+                  style="width:150px; height:225px; object-fit:cover;"
+                )
+                p.mt-2= movie.film_title
+
+              // Knop om film uit favorieten te verwijderen
+              form(action="/favorites/remove", method="POST")
+                input(type="hidden", name="filmId", value=movie.film_id)
+                button.btn.btn-danger(type="submit") Verwijderen
+    else
+      .row
+        .col-12
+          .alert.alert-info(role="alert") Je hebt nog geen films aan je favorieten toegevoegd.

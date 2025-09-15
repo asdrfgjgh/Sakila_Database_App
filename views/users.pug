@@ -1,0 +1,8 @@
+extends layouts/layout
+
+block content
+  h1= user.name
+  p Welcome to #{user.name}
+  ul 
+    each user in users
+      li= user.name

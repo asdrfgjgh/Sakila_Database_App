@@ -1,0 +1,40 @@
+extends layouts/layout.pug
+
+block content
+  .container.mt-5
+    .row.justify-content-center
+      .col-md-6.col-lg-5
+        .card.shadow
+          .card-body.p-4
+            h2.card-title.text-center.mb-4 Inloggen
+            
+            // Dit blok toont een foutmelding als deze wordt meegegeven vanuit de server
+            if error
+              .alert.alert-danger.text-center(role="alert")= error
+            
+            // Inlogformulier
+            form(action="/auth/login", method="POST")
+              .mb-3
+                label.form-label(for="username") Gebruikersnaam
+                input.form-control(
+                  type="text",
+                  id="username",
+                  name="username",
+                  required,
+                  aria-describedby="usernameHelp"
+                )
+
+              .mb-3
+                label.form-label(for="password") Wachtwoord
+                input.form-control(
+                  type="password",
+                  id="password",
+                  name="password",
+                  required
+                )
+
+              button.btn.btn-primary.w-100(type="submit") Inloggen
+            
+            hr.my-4
+            
+            p.text-center Heb je nog geen account? #[a(href="/auth/register") Registreer dan hier]

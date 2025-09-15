@@ -1,0 +1,50 @@
+extends layouts/layout.pug
+
+block content
+  .container.mt-5
+    .row.justify-content-center
+      .col-md-6.col-lg-5
+        .card.shadow
+          .card-body.p-4
+            h2.card-title.text-center.mb-4 Registreren
+            
+            // Dit blok toont een foutmelding als deze wordt meegegeven vanuit de server
+            if error
+              .alert.alert-danger.text-center(role="alert")= error
+            
+            // Registratieformulier
+            form(action="/auth/register", method="POST")
+              .mb-3
+                label.form-label(for="username") Gebruikersnaam
+                input.form-control(
+                  type="text",
+                  id="username",
+                  name="username",
+                  required,
+                  aria-describedby="usernameHelp"
+                )
+                .form-text#usernameHelp Kies een unieke gebruikersnaam.
+
+              .mb-3
+                label.form-label(for="password") Wachtwoord
+                input.form-control(
+                  type="password",
+                  id="password",
+                  name="password",
+                  required
+                )
+
+              .mb-3
+                label.form-label(for="passwordConfirm") Bevestig wachtwoord
+                input.form-control(
+                  type="password",
+                  id="passwordConfirm",
+                  name="passwordConfirm",
+                  required
+                )
+
+              button.btn.btn-primary.w-100(type="submit") Registreren
+            
+            hr.my-4
+            
+            p.text-center Heb je al een account? #[a(href="/auth/login") Log dan in]

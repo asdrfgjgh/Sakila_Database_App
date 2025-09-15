@@ -1,0 +1,29 @@
+extends ../layouts/layout
+
+block content
+  h1= title
+
+  if movie
+    .container
+      .row
+        .col-md-6
+          img(
+            src=movie.imageUrl || "/images/filmfoto.jpg",
+            alt=movie.title,
+            class="img-fluid rounded",
+            width="300"
+          )
+        .col-md-6
+          h2= movie.title
+          p= movie.description
+          p
+            strong Release Date:
+            | #{movie.release_year}
+          p
+            strong Rating:
+            | #{movie.rating}
+
+          // Terugknop
+          a.btn.btn-secondary.mt-3(href="/movies") ← Terug naar overzicht
+  else
+    p Movie details not found.
