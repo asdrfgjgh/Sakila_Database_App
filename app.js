@@ -3,7 +3,8 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("./src/util/logger");
-const session = require("express-session"); // Importeer de sessie-middleware
+const session = require("express-session"); 
+const flash = require('connect-flash'); 
 const favoritesRouter = require('./src/routes/favorites.routes');
 
 const indexRouter = require("./src/routes/index");
@@ -23,14 +24,27 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-// Configureer en gebruik de sessie-middleware VOOR de routes
+// Configure and use session middleware FIRST
 app.use(session({
-    secret: 'jouw_geheime_sleutel', // Vervang dit door een lange, willekeurige string
+    secret: 'your_secret_key', 
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false } // Gebruik 'true' in productie met HTTPS
+    cookie: { secure: false }
 }));
 
+// Add flash middleware AFTER the session middleware
+app.use(flash()); 
+
+// Middleware to make variables available to all views
+app.use((req, res, next) => {
+    res.locals.isLoggedIn = !!req.session.userId;
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    next();
+});
+
+// Your routes
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/movies", movieRouter);
@@ -38,19 +52,15 @@ app.use("/about", aboutRouter);
 app.use("/auth", authRouter);
 app.use("/favorites", favoritesRouter);
 
-
-// catch 404 and forward to error handler
+// Catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404));
 });
 
 // error handler
 app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get("env") === "development" ? err : {};
-
-    // render the error page
     res.status(err.status || 500);
     res.render("error");
 });

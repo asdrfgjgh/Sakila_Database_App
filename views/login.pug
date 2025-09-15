@@ -9,7 +9,7 @@ block content
             h2.card-title.text-center.mb-4 Inloggen
             
             // Dit blok toont een foutmelding als deze wordt meegegeven vanuit de server
-            if error
+            if error && error.length > 0
               .alert.alert-danger.text-center(role="alert")= error
             
             // Inlogformulier

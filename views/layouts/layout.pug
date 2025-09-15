@@ -37,18 +37,38 @@ html
               a.nav-link(href="/") Home
             li.nav-item
               a.nav-link(href="/movies") Movies
-            li.nav-item
-              a.nav-link(href="/favorites") Favorites
+            // Toon "Favorites" link alleen als gebruiker is ingelogd
+            if isLoggedIn
+              li.nav-item
+                a.nav-link(href="/favorites") Favorites
             li.nav-item
               a.nav-link(href="/about") About
-            li.nav-item
-              a.btn.btn-outline-primary(href="/auth/login") Inloggen
-            li.nav-item
-              a.btn.btn-primary(href="/auth/register") Registreren
+            
+            // Toon inlog- en registratieknoppen OF de uitlogknop
+            if !isLoggedIn
+              li.nav-item
+                a.btn.btn-outline-primary(href="/auth/login") Inloggen
+              li.nav-item
+                a.btn.btn-primary(href="/auth/register") Registreren
+            else
+              li.nav-item
+                a.btn.btn-danger(href="/auth/logout") Uitloggen
 
     // De main-content container.
     // flex-grow-1 zorgt ervoor dat deze container de resterende ruimte inneemt.
-    main.container-fluid.flex-grow-1.ps-5
+    main.container-fluid.flex-grow-1.p-5
+      // Toon succesberichten
+      if success_msg && success_msg.length > 0
+        .alert.alert-success.alert-dismissible.fade.show(role='alert')
+          = success_msg
+          button.btn-close(type='button', data-bs-dismiss='alert', aria-label='Close')
+
+      // Toon foutberichten
+      if error && error.length > 0
+        .alert.alert-danger.alert-dismissible.fade.show(role='alert')
+          = error
+          button.btn-close(type='button', data-bs-dismiss='alert', aria-label='Close')
+          
       block content
 
     // Footer
