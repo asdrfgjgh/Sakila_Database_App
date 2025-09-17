@@ -39,7 +39,7 @@ router.post('/login', (req, res) => {
         connection.release();
         return res.status(401).render('login', {
           title: 'Log In',
-          error: 'Incorrect email-address or password.'
+          error: 'Incorrect email address or password.'
         });
       }
 
@@ -66,7 +66,7 @@ router.post('/login', (req, res) => {
         } else {
           res.status(401).render('login', {
             title: 'Log In',
-            error: 'Incorrect email-address or password.'
+            error: 'Incorrect email address or password.'
           });
         }
       });
