@@ -20,7 +20,7 @@ block content
             // Nieuwe code voor de favorietenknop
             form(action="/favorites/add", method="POST")
               input(type="hidden", name="filmId", value=movie.film_id)
-              button.btn.btn-outline-secondary(type="submit") Voeg toe aan favorieten
+              button.btn.btn-outline-secondary(type="submit") Add to Favorites
 
   if totalPages > 1
     nav.mt-4

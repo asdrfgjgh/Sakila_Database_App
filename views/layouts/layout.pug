@@ -47,12 +47,12 @@ html
             // Toon inlog- en registratieknoppen OF de uitlogknop
             if !isLoggedIn
               li.nav-item
-                a.btn.btn-outline-primary(href="/auth/login") Inloggen
+                a.btn.btn-outline-primary(href="/auth/login") Log in
               li.nav-item
-                a.btn.btn-primary(href="/auth/register") Registreren
+                a.btn.btn-primary(href="/auth/register") Register
             else
               li.nav-item
-                a.btn.btn-danger(href="/auth/logout") Uitloggen
+                a.btn.btn-danger(href="/auth/logout") Log out
 
     // De main-content container.
     // flex-grow-1 zorgt ervoor dat deze container de resterende ruimte inneemt.
@@ -73,7 +73,7 @@ html
 
     // Footer
     footer.bg-dark.text-white.text-center.p-3.mt-4
-      p &copy; 2025 Sakila Database App. Gemaakt door Ryan Pat.
+      p &copy; 2025 Sakila Database App. Made by Ryan Pat.
 
     // Bootstrap JS
     script(

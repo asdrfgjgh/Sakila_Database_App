@@ -2,10 +2,10 @@ extends ../layouts/layout.pug
 
 block content
   // Knop om terug te gaan naar de vorige pagina
-  a.btn.btn-secondary(href="javascript:history.back()") Terug
+  a.btn.btn-secondary(href="javascript:history.back()") Back
 
-  h1 Mijn favoriete films
-  p Hier vind je al je favoriete films.
+  h1 My Favorite Movies
+  p Here you can find all your favorite movies.
   .container
     if favoriteMovies && favoriteMovies.length > 0
       .row
@@ -23,8 +23,8 @@ block content
               // Knop om film uit favorieten te verwijderen
               form(action="/favorites/remove", method="POST")
                 input(type="hidden", name="filmId", value=movie.film_id)
-                button.btn.btn-danger(type="submit") Verwijderen
+                button.btn.btn-danger(type="submit") Remove from Favorites
     else
       .row
         .col-12
-          .alert.alert-info(role="alert") Je hebt nog geen films aan je favorieten toegevoegd.
+          .alert.alert-info(role="alert") You haven't added any movies to your favorites yet.

@@ -8,37 +8,38 @@ const saltRounds = 10;
 
 // GET route voor de loginpagina
 router.get('/login', (req, res) => {
-  res.render('login', { title: 'Inloggen' });
+  res.render('login', { title: 'Log In' });
 });
 
 // POST route om in te loggen
 router.post('/login', (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   pool.getConnection((err, connection) => {
     if (err) {
       console.error('Fout bij verkrijgen verbinding:', err);
       return res.status(500).render('login', {
-        title: 'Inloggen',
-        error: 'Er is een interne serverfout opgetreden.'
+        title: 'Log In',
+        error: 'Internal server error.'
       });
     }
 
-    connection.query('SELECT * FROM users WHERE username = ?', [username], (err, rows) => {
+    // Aangepaste query van username naar email
+    connection.query('SELECT * FROM users WHERE email = ?', [email], (err, rows) => {
       if (err) {
         connection.release();
         console.error('Fout bij query:', err);
         return res.status(500).render('login', {
-          title: 'Inloggen',
-          error: 'Er is een interne serverfout opgetreden.'
+          title: 'Log In',
+          error: 'Internal server error.'
         });
       }
 
       if (rows.length === 0) {
         connection.release();
         return res.status(401).render('login', {
-          title: 'Inloggen',
-          error: 'Onjuiste gebruikersnaam of wachtwoord.'
+          title: 'Log In',
+          error: 'Incorrect email-address or password.'
         });
       }
 
@@ -47,26 +48,25 @@ router.post('/login', (req, res) => {
       bcrypt.compare(password, user.password_hash, (err, isMatch) => {
         connection.release();
         if (err) {
-          console.error('Fout bij wachtwoordvergelijking:', err);
+          console.error('Error comparing password:', err);
           return res.status(500).render('login', {
-            title: 'Inloggen',
-            error: 'Er is een interne serverfout opgetreden.'
+            title: 'Log In',
+            error: 'Internal server error.'
           });
         }
 
         if (isMatch) {
           req.session.userId = user.user_id;
-          console.log(`Gebruiker '${username}' is succesvol ingelogd. Sessie-ID: ${req.session.userId}`);
-          
-          // Voeg een succesbericht toe aan de sessie
-          req.flash('success_msg', 'Je bent succesvol ingelogd!');
+          // Aangepaste log van username naar email
+          console.log(`User with email '${email}' has successfully logged in. Session ID: ${req.session.userId}`);
 
-          // Stuur de gebruiker door naar de movies pagina
+          req.flash('success_msg', 'You have successfully logged in!');
+
           res.redirect('/movies');
         } else {
           res.status(401).render('login', {
-            title: 'Inloggen',
-            error: 'Onjuiste gebruikersnaam of wachtwoord.'
+            title: 'Log In',
+            error: 'Incorrect email-address or password.'
           });
         }
       });
@@ -76,64 +76,67 @@ router.post('/login', (req, res) => {
 
 // GET route voor de registratiepagina
 router.get('/register', (req, res) => {
-  res.render('register', { title: 'Registreren' });
+  res.render('register', { title: 'Register' });
 });
 
-// POST route om te registreren
+// POST route om te Register
 router.post('/register', (req, res) => {
-  const { username, password, passwordConfirm } = req.body;
+  // Aangepaste destructurering van username naar email
+  const { email, password, passwordConfirm } = req.body;
 
   if (password !== passwordConfirm) {
     return res.status(400).render('register', {
-      title: 'Registreren',
-      error: 'Wachtwoorden komen niet overeen.'
+      title: 'Register',
+      error: 'Passwords do not match.'
     });
   }
 
   pool.getConnection((err, connection) => {
     if (err) {
-      console.error('Fout bij verkrijgen verbinding:', err);
+      console.error('Error obtaining connection:', err);
       return res.status(500).render('register', {
-        title: 'Registreren',
-        error: 'Er is een interne serverfout opgetreden.'
+        title: 'Register',
+        error: 'Internal server error.'
       });
     }
 
-    connection.query('SELECT username FROM users WHERE username = ?', [username], (err, rows) => {
+    // Aangepaste query van username naar email
+    connection.query('SELECT email FROM users WHERE email = ?', [email], (err, rows) => {
       if (err) {
         connection.release();
-        console.error('Fout bij controleren gebruiker:', err);
+        console.error('Error checking user:', err);
         return res.status(500).render('register', {
-          title: 'Registreren',
-          error: 'Er is een interne serverfout opgetreden.'
+          title: 'Register',
+          error: 'Internal server error.'
         });
       }
 
       if (rows.length > 0) {
         connection.release();
         return res.status(409).render('register', {
-          title: 'Registreren',
-          error: 'Deze gebruikersnaam is al in gebruik.'
+          title: 'Register',
+          error: 'This email address is already in use.'
         });
       }
 
       bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
         if (err) {
           connection.release();
-          console.error('Fout bij hashen wachtwoord:', err);
+          console.error('Error hashing password:', err);
           return res.status(500).render('register', {
-            title: 'Registreren',
-            error: 'Er is een interne serverfout opgetreden.'
+            title: 'Register',
+            error: 'Internal server error.'
           });
         }
 
-        connection.query('INSERT INTO users (username, password_hash) VALUES (?, ?)', [username, hashedPassword], (err) => {
+        // Aangepaste query van username naar email
+        connection.query('INSERT INTO users (email, password_hash) VALUES (?, ?)', [email, hashedPassword], (err) => {
           connection.release();
           if (err) {
-            console.error('Fout bij invoegen gebruiker:', err);
+            console.error('Error inserting user:', err);
             return res.status(500).render('register', {
-              title: 'Registreren',
-              error: 'Er is een interne serverfout opgetreden.'
+              title: 'Register',
+              error: 'Internal server error.'
             });
           }
 
@@ -144,31 +147,19 @@ router.post('/register', (req, res) => {
   });
 });
 
-// NIEUWE GET route voor uitloggen
-// src/routes/auth.routes.js
-
-// ... (andere imports en routes)
-
 // GET route voor uitloggen
 router.get('/logout', (req, res, next) => {
-  // Controleer of er een sessie bestaat
   if (req.session) {
-    // Vernietig de sessie
     req.session.destroy(err => {
       if (err) {
-        // Log de fout, maar stuur de gebruiker alsnog door
-        console.error('Fout bij het vernietigen van de sessie:', err);
+        console.error('Error destroying session:', err);
         return res.redirect('/');
       }
-      // Stuur de gebruiker door naar de homepagina
       res.redirect('/');
     });
   } else {
-    // Als er geen sessie is, stuur de gebruiker gewoon door
     res.redirect('/');
   }
 });
-
-// ... (andere routes)
 
 module.exports = router;

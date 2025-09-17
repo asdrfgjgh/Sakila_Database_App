@@ -6,7 +6,7 @@ block content
       .col-md-6.col-lg-5
         .card.shadow
           .card-body.p-4
-            h2.card-title.text-center.mb-4 Registreren
+            h2.card-title.text-center.mb-4 Register
             
             // Dit blok toont een foutmelding als deze wordt meegegeven vanuit de server
             if error && error.length > 0
@@ -15,18 +15,18 @@ block content
             // Registratieformulier
             form(action="/auth/register", method="POST")
               .mb-3
-                label.form-label(for="username") Gebruikersnaam
+                label.form-label(for="email") E-mailadres
                 input.form-control(
-                  type="text",
-                  id="username",
-                  name="username",
+                  type="email",
+                  id="email",
+                  name="email",
                   required,
-                  aria-describedby="usernameHelp"
+                  aria-describedby="emailHelp"
                 )
-                .form-text#usernameHelp Kies een unieke gebruikersnaam.
+                .form-text#emailHelp Enter a valid email address.
 
               .mb-3
-                label.form-label(for="password") Wachtwoord
+                label.form-label(for="password") password
                 input.form-control(
                   type="password",
                   id="password",
@@ -35,7 +35,7 @@ block content
                 )
 
               .mb-3
-                label.form-label(for="passwordConfirm") Bevestig wachtwoord
+                label.form-label(for="passwordConfirm") Confirm password
                 input.form-control(
                   type="password",
                   id="passwordConfirm",
@@ -43,8 +43,8 @@ block content
                   required
                 )
 
-              button.btn.btn-primary.w-100(type="submit") Registreren
+              button.btn.btn-primary.w-100(type="submit") Register
             
             hr.my-4
             
-            p.text-center Heb je al een account? #[a(href="/auth/login") Log dan in]
+            p.text-center Already have an account? #[a(href="/auth/login") Log in here]

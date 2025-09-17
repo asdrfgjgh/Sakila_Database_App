@@ -6,7 +6,7 @@ block content
       .col-md-6.col-lg-5
         .card.shadow
           .card-body.p-4
-            h2.card-title.text-center.mb-4 Inloggen
+            h2.card-title.text-center.mb-4 Log in
             
             // Dit blok toont een foutmelding als deze wordt meegegeven vanuit de server
             if error && error.length > 0
@@ -15,17 +15,18 @@ block content
             // Inlogformulier
             form(action="/auth/login", method="POST")
               .mb-3
-                label.form-label(for="username") Gebruikersnaam
+                label.form-label(for="email") E-mailadres
                 input.form-control(
-                  type="text",
-                  id="username",
-                  name="username",
+                  type="email",
+                  id="email",
+                  name="email",
                   required,
-                  aria-describedby="usernameHelp"
+                  aria-describedby="emailHelp"
                 )
+                .form-text#emailHelp Use your registered email address.
 
               .mb-3
-                label.form-label(for="password") Wachtwoord
+                label.form-label(for="password") Password
                 input.form-control(
                   type="password",
                   id="password",
@@ -33,8 +34,8 @@ block content
                   required
                 )
 
-              button.btn.btn-primary.w-100(type="submit") Inloggen
+              button.btn.btn-primary.w-100(type="submit") Log in
             
             hr.my-4
-            
-            p.text-center Heb je nog geen account? #[a(href="/auth/register") Registreer dan hier]
+
+            p.text-center Don't have an account? #[a(href="/auth/register") Register here]
