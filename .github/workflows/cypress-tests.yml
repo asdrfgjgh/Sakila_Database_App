@@ -11,6 +11,7 @@ on:
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,16 +24,21 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Gebruik de secrets om een .env bestand aan te maken of direct te injecteren
-      - name: Create .env file with secrets
+      # Stap 1: Gebruik GitHub Secrets om een .env-bestand aan te maken.
+      - name: Create .env file from secrets
         run: |
           echo "DB_USER=${{ secrets.DB_USER }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "NODE_ENV=test" >> .env
-        env:
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          # Voeg andere secrets toe die je nodig hebt in je .env bestand
+          # Voeg hier meer secrets toe indien nodig
 
+      # Stap 2: Start de applicatie op de achtergrond.
+      - name: Start app
+        run: npm start &
+
+      # Stap 3: Wacht op de applicatie om volledig te starten.
+      - name: Wait for app to be ready
+        run: sleep 10
+
+      # Stap 4: Voer de Cypress-tests uit.
       - name: Run Cypress tests
         run: npx cypress run
