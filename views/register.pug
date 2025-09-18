@@ -8,14 +8,30 @@ block content
           .card-body.p-4
             h2.card-title.text-center.mb-4 Register
             
-            // Dit blok toont een foutmelding als deze wordt meegegeven vanuit de server
+            // This block displays an error message if passed from the server
             if error && error.length > 0
               .alert.alert-danger.text-center(role="alert")= error
             
-            // Registratieformulier
+            // Registration form
             form(action="/auth/register", method="POST")
               .mb-3
-                label.form-label(for="email") E-mailadres
+                label.form-label(for="first_name") First Name
+                input.form-control(
+                  type="text",
+                  id="first_name",
+                  name="first_name",
+                  required
+                )
+              .mb-3
+                label.form-label(for="last_name") Last Name
+                input.form-control(
+                  type="text",
+                  id="last_name",
+                  name="last_name",
+                  required
+                )
+              .mb-3
+                label.form-label(for="email") E-mail Address
                 input.form-control(
                   type="email",
                   id="email",
@@ -26,7 +42,7 @@ block content
                 .form-text#emailHelp Enter a valid email address.
 
               .mb-3
-                label.form-label(for="password") password
+                label.form-label(for="password") Password
                 input.form-control(
                   type="password",
                   id="password",
@@ -35,7 +51,7 @@ block content
                 )
 
               .mb-3
-                label.form-label(for="passwordConfirm") Confirm password
+                label.form-label(for="passwordConfirm") Confirm Password
                 input.form-control(
                   type="password",
                   id="passwordConfirm",
