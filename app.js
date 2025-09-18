@@ -8,7 +8,7 @@ const flash = require('connect-flash');
 const favoritesRouter = require('./src/routes/favorites.routes');
 
 const indexRouter = require("./src/routes/index");
-const usersRouter = require("./src/routes/users.routes");
+const usersRouter = require("./src/routes/profile.routes");
 const movieRouter = require("./src/routes/movie.routes");
 const aboutRouter = require("./src/routes/about.routes");
 const authRouter = require("./src/routes/auth.routes");
@@ -46,7 +46,7 @@ app.use((req, res, next) => {
 
 // Your routes
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/profile", usersRouter);
 app.use("/movies", movieRouter);
 app.use("/about", aboutRouter);
 app.use("/auth", authRouter);
