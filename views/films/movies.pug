@@ -2,38 +2,46 @@ extends ../layouts/layout
 
 block content
   h1= title
-  p Welcome to #{title}
-  .container
-    .row
-      each movie in movies
-        .col-6.col-md-3.text-center
-          .movie-block
-            // De <a> tag omvat zowel de afbeelding als de titel
-            a(href=`/movies/${movie.film_id}`)
-              img(
-                src=movie.imageUrl ? movie.imageUrl : "/images/filmfoto.jpg",
-                alt=movie.title,
-                style="width:150px; height:225px; object-fit:cover;"
-              )
-              p.mt-2= movie.title
-            
-            // Nieuwe code voor de favorietenknop
-            form(action="/favorites/add", method="POST")
-              input(type="hidden", name="filmId", value=movie.film_id)
-              button.btn.btn-outline-secondary(type="submit") Add to Favorites
 
+  // Zoekformulier toegevoegd
+  form(action="/movies", method="GET", class="d-flex mb-4")
+    input(
+      type="search",
+      name="search",
+      class="form-control me-2",
+      placeholder="Zoek films...",
+      aria-label="Zoek",
+      value=searchQuery || ''
+    )
+    button(class="btn btn-outline-success", type="submit") Zoeken
+
+  // Verbetering van de weergave bij geen resultaten
+  if movies.length > 0
+    .container
+      .row
+        each movie in movies
+          .col-6.col-md-3.text-center
+            .movie-block
+              a(href=`/movies/${movie.film_id}`)
+                img(
+                  src=movie.imageUrl ? movie.imageUrl : "/images/filmfoto.jpg",
+                  alt=movie.title,
+                  style="width:150px; height:225px; object-fit:cover;"
+                )
+                p.mt-2= movie.title
+  else
+    p Geen films gevonden. Probeer een andere zoekterm.
+
+  // Paginatie, nu met zoekterm behoud
   if totalPages > 1
     nav.mt-4
       ul.pagination.justify-content-center
-        //- Previous button
         li.page-item(class=(currentPage === 1 ? 'disabled' : ''))
-          a.page-link(href=`/movies?page=${currentPage - 1}`) Previous
+          a.page-link(href=`/movies?page=${currentPage - 1}${searchQuery ? '&search=' + searchQuery : ''}`) Previous
 
-        //- Corrected: Loop over the 'pagesToShow' array
         each num in pagesToShow
           li.page-item(class=(num === currentPage ? 'active' : ''))
-            a.page-link(href=`/movies?page=${num}`)= num
+            a.page-link(href=`/movies?page=${num}${searchQuery ? '&search=' + searchQuery : ''}`)= num
 
-        //- Next button
         li.page-item(class=(currentPage === totalPages ? 'disabled' : ''))
-          a.page-link(href=`/movies?page=${currentPage + 1}`) Next
+          a.page-link(href=`/movies?page=${currentPage + 1}${searchQuery ? '&search=' + searchQuery : ''}`) Next

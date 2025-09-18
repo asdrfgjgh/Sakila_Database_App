@@ -1,11 +1,14 @@
+// src/controllers/movie.controller.js
+
 const moviesDAO = require("../dao/moviesDAO");
 
 function getAllMovies(req, res, next) {
   const page = parseInt(req.query.page) || 1;
   const limit = 50; // number of movies per page
   const offset = (page - 1) * limit;
+  const searchQuery = req.query.search || ''; // Lees de zoekterm uit de query parameters
 
-  moviesDAO.getMoviesPaginated(limit, offset, (err, data) => {
+  moviesDAO.getMoviesPaginated(limit, offset, searchQuery, (err, data) => {
     if (err) return next(err);
 
     const totalPages = Math.ceil(data.totalMovies / limit);
@@ -26,6 +29,7 @@ function getAllMovies(req, res, next) {
       currentPage: page,
       totalPages,
       pagesToShow, // Add the new array of page numbers
+      searchQuery, // Voeg de zoekterm toe aan het model
       hasPrevious: page > 1,
       hasNext: page < totalPages,
     };
@@ -33,6 +37,7 @@ function getAllMovies(req, res, next) {
     res.render("films/movies", model);
   });
 }
+
 function getMovieById(req, res, next) {
   const movieId = req.params.id;
   moviesDAO.findMovieById(movieId, (err, movie) => {

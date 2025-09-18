@@ -23,7 +23,12 @@ block content
             strong Rating:
             | #{movie.rating}
 
+          // Voeg hier het formulier toe voor de "Add to Favorites" knop
+          form(action="/favorites/add", method="POST", style="display:inline-block;")
+            input(type="hidden", name="filmId", value=movie.film_id)
+            button.btn.btn-primary.mt-3(type="submit") Add to Favorites
+
           // Back button
-          a.btn.btn-secondary.mt-3(href="/movies") ← Back to Movies
+          a.btn.btn-secondary.mt-3(href="/movies", style="margin-left: 10px;") ← Back to Movies
   else
     p Movie details not found.
