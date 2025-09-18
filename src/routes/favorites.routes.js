@@ -85,7 +85,7 @@ router.post('/add', ensureAuthenticated, (req, res) => {
                         console.error('Error adding favorite:', err);
                         return res.status(500).send('Internal Server Error');
                     }
-                    res.redirect(`/movies/${filmId}`);
+                    res.redirect(`/favorites`);
                 });
             }
         });
