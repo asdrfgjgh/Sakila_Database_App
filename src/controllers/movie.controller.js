@@ -1,40 +1,48 @@
 // src/controllers/movie.controller.js
 
 const moviesDAO = require("../dao/moviesDAO");
+const categoriesDAO = require("../dao/categoriesDAO");
 
 function getAllMovies(req, res, next) {
   const page = parseInt(req.query.page) || 1;
-  const limit = 50; // number of movies per page
+  const limit = 50;
   const offset = (page - 1) * limit;
-  const searchQuery = req.query.search || ''; // Lees de zoekterm uit de query parameters
+  const searchQuery = req.query.search || '';
+  const selectedGenre = req.query.genre || '';
 
-  moviesDAO.getMoviesPaginated(limit, offset, searchQuery, (err, data) => {
+  categoriesDAO.getAllCategories((err, genres) => {
     if (err) return next(err);
 
-    const totalPages = Math.ceil(data.totalMovies / limit);
-    
-    // Logic to create an array of pages to display
-    const pagesToShow = [];
-    const maxPagesToShow = 3; // The maximum number of page links to show
-    const startPage = Math.max(1, page - Math.floor(maxPagesToShow / 2));
-    const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+    // Controleer of de aanroep van getMoviesPaginated correct is
+    moviesDAO.getMoviesPaginated(limit, offset, searchQuery, selectedGenre, (err, data) => {
+      if (err) return next(err);
 
-    for (let i = startPage; i <= endPage; i++) {
-      pagesToShow.push(i);
-    }
+      const totalPages = Math.ceil(data.totalMovies / limit);
+      
+      const pagesToShow = [];
+      const maxPagesToShow = 3;
+      const startPage = Math.max(1, page - Math.floor(maxPagesToShow / 2));
+      const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
 
-    const model = {
-      title: "Movielist",
-      movies: data.movies,
-      currentPage: page,
-      totalPages,
-      pagesToShow, // Add the new array of page numbers
-      searchQuery, // Voeg de zoekterm toe aan het model
-      hasPrevious: page > 1,
-      hasNext: page < totalPages,
-    };
+      for (let i = startPage; i <= endPage; i++) {
+        pagesToShow.push(i);
+      }
 
-    res.render("films/movies", model);
+      const model = {
+        title: "Movielist",
+        movies: data.movies,
+        genres: genres,
+        selectedGenre: selectedGenre,
+        currentPage: page,
+        totalPages,
+        pagesToShow,
+        searchQuery,
+        hasPrevious: page > 1,
+        hasNext: page < totalPages,
+      };
+
+      res.render("films/movies", model);
+    });
   });
 }
 

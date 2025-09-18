@@ -3,17 +3,27 @@ extends ../layouts/layout
 block content
   h1= title
 
-  // Zoekformulier toegevoegd
-  form(action="/movies", method="GET", class="d-flex mb-4")
-    input(
-      type="search",
-      name="search",
-      class="form-control me-2",
-      placeholder="Zoek films...",
-      aria-label="Zoek",
-      value=searchQuery || ''
-    )
-    button(class="btn btn-outline-success", type="submit") Zoeken
+  .d-flex.justify-content-end.mb-4.align-items-center
+    // Dropdown voor genres
+    form(action="/movies", method="GET", class="me-2")
+      .input-group
+        label.input-group-text(for="genre-select") Genre
+        select#genre-select.form-select(name="genre" onchange="this.form.submit()")
+          option(value="") Alle
+          each genre in genres
+            option(value=genre.category_id, selected=genre.category_id == selectedGenre)= genre.name
+
+    // Zoekformulier
+    form(action="/movies", method="GET", class="d-flex")
+      input(
+        type="search",
+        name="search",
+        class="form-control me-2",
+        placeholder="Zoek films...",
+        aria-label="Zoek",
+        value=searchQuery || ''
+      )
+      button(class="btn btn-outline-success", type="submit") Zoeken
 
   // Verbetering van de weergave bij geen resultaten
   if movies.length > 0
@@ -32,16 +42,16 @@ block content
   else
     p Geen films gevonden. Probeer een andere zoekterm.
 
-  // Paginatie, nu met zoekterm behoud
+  // Paginatie, nu met zoekterm en genre behoud
   if totalPages > 1
     nav.mt-4
       ul.pagination.justify-content-center
         li.page-item(class=(currentPage === 1 ? 'disabled' : ''))
-          a.page-link(href=`/movies?page=${currentPage - 1}${searchQuery ? '&search=' + searchQuery : ''}`) Previous
+          a.page-link(href=`/movies?page=${currentPage - 1}${searchQuery ? '&search=' + searchQuery : ''}${selectedGenre ? '&genre=' + selectedGenre : ''}`) Previous
 
         each num in pagesToShow
           li.page-item(class=(num === currentPage ? 'active' : ''))
-            a.page-link(href=`/movies?page=${num}${searchQuery ? '&search=' + searchQuery : ''}`)= num
+            a.page-link(href=`/movies?page=${num}${searchQuery ? '&search=' + searchQuery : ''}${selectedGenre ? '&genre=' + selectedGenre : ''}`)= num
 
         li.page-item(class=(currentPage === totalPages ? 'disabled' : ''))
-          a.page-link(href=`/movies?page=${currentPage + 1}${searchQuery ? '&search=' + searchQuery : ''}`) Next
+          a.page-link(href=`/movies?page=${currentPage + 1}${searchQuery ? '&search=' + searchQuery : ''}${selectedGenre ? '&genre=' + selectedGenre : ''}`) Next
