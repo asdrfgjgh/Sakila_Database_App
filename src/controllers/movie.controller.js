@@ -53,7 +53,7 @@ function getMovieById(req, res, next) {
       return next(err);
     }
     if (!movie) {
-      return res.status(404).send("Film niet gevonden");
+      return res.status(404).send("Movie not found");
     }
     const model = {
       title: movie.title,

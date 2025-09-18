@@ -18,7 +18,7 @@ router.get('/', ensureAuthenticated, (req, res) => {
   const customerId = req.session.userId; // Gebruik customerId
   pool.getConnection((err, connection) => {
     if (err) {
-      console.error('Fout bij verkrijgen verbinding:', err);
+      console.error('Error getting connection:', err);
       return res.status(500).render('error', { message: 'Internal Server Error' });
     }
 
@@ -35,7 +35,7 @@ router.get('/', ensureAuthenticated, (req, res) => {
         console.error('Fout bij query:', err);
         return res.status(500).render('error', { message: 'Internal Server Error' });
       }
-      res.render('films/favorites', { title: 'Mijn favorieten', favoriteMovies });
+      res.render('films/favorites', { title: 'My Favorites', favoriteMovies });
     });
   });
 });
@@ -47,7 +47,7 @@ router.post('/add', ensureAuthenticated, (req, res) => {
 
   pool.getConnection((err, connection) => {
     if (err) {
-      console.error('Fout bij verkrijgen verbinding:', err);
+      console.error('Error getting connection:', err);
       return res.status(500).send('Internal Server Error');
     }
 
@@ -56,15 +56,15 @@ router.post('/add', ensureAuthenticated, (req, res) => {
     connection.query(checkQuery, [customerId, filmId], (err, rows) => {
       if (err) {
         connection.release();
-        console.error('Fout bij controleren op dubbele:', err);
+        console.error('Error checking for duplicates:', err);
         return res.status(500).send('Internal Server Error');
       }
 
       // Als de film al favoriet is, stuur dan een foutmelding of redirect
       if (rows.length > 0) {
         connection.release();
-        console.log(`Film ${filmId} is al een favoriet voor gebruiker ${customerId}.`);
-        return res.status(409).send('Film is al een favoriet.');
+        console.log(`Movie ${filmId} is already a favorite for user ${customerId}.`);
+        return res.status(409).send('Movie is already a favorite.');
       }
 
       // Voeg de film toe
@@ -72,7 +72,7 @@ router.post('/add', ensureAuthenticated, (req, res) => {
       connection.query(insertQuery, [customerId, filmId], (err) => {
         connection.release();
         if (err) {
-          console.error('Fout bij toevoegen van favoriet:', err);
+          console.error('Error adding favorite:', err);
           return res.status(500).send('Internal Server Error');
         }
         res.redirect('/favorites');
@@ -88,7 +88,7 @@ router.post('/remove', ensureAuthenticated, (req, res) => {
 
   pool.getConnection((err, connection) => {
     if (err) {
-      console.error('Fout bij verkrijgen verbinding:', err);
+      console.error('Error getting connection:', err);
       return res.status(500).send('Internal Server Error');
     }
 
@@ -96,7 +96,7 @@ router.post('/remove', ensureAuthenticated, (req, res) => {
     connection.query(query, [customerId, filmId], (err) => {
       connection.release();
       if (err) {
-        console.error('Fout bij verwijderen van favoriet:', err);
+        console.error('Error removing favorite:', err);
         return res.status(500).send('Internal Server Error');
       }
       res.redirect('/favorites');
