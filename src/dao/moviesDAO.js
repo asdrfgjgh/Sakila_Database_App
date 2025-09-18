@@ -44,15 +44,24 @@ function getMoviesPaginated(limit, offset, searchQuery, selectedGenre, callback)
 }
 
 function findMovieById(id, callback) {
-  pool.query('SELECT * FROM film WHERE film_id = ?', [id], (err, results) => {
-    if (err) {
-      return callback(err, null);
-    }
-    if (results.length === 0) {
-      return callback(null, null);
-    }
-    callback(null, results[0]);
-  });
+    const query = `
+      SELECT 
+        f.*, 
+        c.name AS genre_name
+      FROM film f
+      JOIN film_category fc ON f.film_id = fc.film_id
+      JOIN category c ON fc.category_id = c.category_id
+      WHERE f.film_id = ?
+    `;
+    pool.query(query, [id], (err, results) => {
+        if (err) {
+            return callback(err, null);
+        }
+        if (results.length === 0) {
+            return callback(null, null);
+        }
+        callback(null, results[0]);
+    });
 }
 
 module.exports = { getMoviesPaginated, findMovieById };

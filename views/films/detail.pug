@@ -17,11 +17,14 @@ block content
           h2= movie.title
           p= movie.description
           p
-            strong Release Date:
+            strong Release Date: 
             | #{movie.release_year}
           p
-            strong Rating:
+            strong Rating: 
             | #{movie.rating}
+          p
+            strong Genre: 
+            | #{movie.genre_name}
 
           // Voeg hier het formulier toe voor de "Add to Favorites" knop
           form(action="/favorites/add", method="POST", style="display:inline-block;")

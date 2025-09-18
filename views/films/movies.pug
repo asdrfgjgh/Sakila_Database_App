@@ -9,7 +9,7 @@ block content
       .input-group
         label.input-group-text(for="genre-select") Genre
         select#genre-select.form-select(name="genre" onchange="this.form.submit()")
-          option(value="") Alle
+          option(value="") All Genres
           each genre in genres
             option(value=genre.category_id, selected=genre.category_id == selectedGenre)= genre.name
 
@@ -19,11 +19,11 @@ block content
         type="search",
         name="search",
         class="form-control me-2",
-        placeholder="Zoek films...",
-        aria-label="Zoek",
+        placeholder="Search movies...",
+        aria-label="Search",
         value=searchQuery || ''
       )
-      button(class="btn btn-outline-success", type="submit") Zoeken
+      button(class="btn btn-outline-success", type="submit") Search
 
   // Verbetering van de weergave bij geen resultaten
   if movies.length > 0
@@ -40,12 +40,17 @@ block content
                 )
                 p.mt-2= movie.title
   else
-    p Geen films gevonden. Probeer een andere zoekterm.
+    p No movies found. Try another search.
 
-  // Paginatie, nu met zoekterm en genre behoud
+  // Paginatie, nu met First en Last knoppen
   if totalPages > 1
     nav.mt-4
       ul.pagination.justify-content-center
+        // First page button
+        li.page-item(class=(currentPage === 1 ? 'disabled' : ''))
+          a.page-link(href=`/movies?page=1${searchQuery ? '&search=' + searchQuery : ''}${selectedGenre ? '&genre=' + selectedGenre : ''}`) First
+        
+        // Previous button
         li.page-item(class=(currentPage === 1 ? 'disabled' : ''))
           a.page-link(href=`/movies?page=${currentPage - 1}${searchQuery ? '&search=' + searchQuery : ''}${selectedGenre ? '&genre=' + selectedGenre : ''}`) Previous
 
@@ -53,5 +58,10 @@ block content
           li.page-item(class=(num === currentPage ? 'active' : ''))
             a.page-link(href=`/movies?page=${num}${searchQuery ? '&search=' + searchQuery : ''}${selectedGenre ? '&genre=' + selectedGenre : ''}`)= num
 
+        // Next button
         li.page-item(class=(currentPage === totalPages ? 'disabled' : ''))
           a.page-link(href=`/movies?page=${currentPage + 1}${searchQuery ? '&search=' + searchQuery : ''}${selectedGenre ? '&genre=' + selectedGenre : ''}`) Next
+          
+        // Last page button
+        li.page-item(class=(currentPage === totalPages ? 'disabled' : ''))
+          a.page-link(href=`/movies?page=${totalPages}${searchQuery ? '&search=' + searchQuery : ''}${selectedGenre ? '&genre=' + selectedGenre : ''}`) Last
