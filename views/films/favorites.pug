@@ -1,30 +1,31 @@
 extends ../layouts/layout.pug
 
 block content
-  // Knop om terug te gaan naar de vorige pagina
-  a.btn.btn-secondary(href="/movies") Go Back
+  // Go Back button
+  a.btn.btn-secondary.mb-4(href="/movies") Go Back
 
-  h1 My Favorite Movies
-  p Here you can find all your favorite movies.
-  .container
+  h1.mb-4 My Favorite Movies
+  p.lead Here you can find all your favorite movies.
+
+  .container-fluid
     if favoriteMovies && favoriteMovies.length > 0
-      .row
+      .row.row-cols-1.row-cols-sm-2.row-cols-md-3.row-cols-lg-4.g-4
         each movie in favoriteMovies
-          .col-6.col-md-3.text-center
-            .movie-block
+          .col
+            .card.h-100.shadow-sm
               a(href=`/movies/${movie.film_id}`)
-                img(
+                img.card-img-top(
                   src=movie.imageUrl ? movie.imageUrl : "/images/filmfoto.jpg",
                   alt=movie.film_title,
-                  style="width:150px; height:225px; object-fit:cover;"
+                  style="height: 300px; object-fit: cover;"
                 )
-                p.mt-2= movie.film_title
-
-              // Knop om film uit favorieten te verwijderen
-              form(action="/favorites/remove", method="POST")
-                input(type="hidden", name="filmId", value=movie.film_id)
-                button.btn.btn-danger(type="submit") Remove from Favorites
+              .card-body.d-flex.flex-column.text-center
+                h5.card-title.text-truncate= movie.film_title
+                
+                // Button to remove from favorites
+                form.mt-auto(action="/favorites/remove", method="POST")
+                  input(type="hidden", name="filmId", value=movie.film_id)
+                  button.btn.btn-danger(type="submit") Remove from Favorites
     else
-      .row
-        .col-12
-          .alert.alert-info(role="alert") You haven't added any movies to your favorites yet.
+      .alert.alert-info.text-center(role="alert")
+        h4.alert-heading You haven't added any movies to your favorites yet.

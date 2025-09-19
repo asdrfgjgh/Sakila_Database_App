@@ -4,7 +4,7 @@ block content
   h1= title
 
   .d-flex.justify-content-end.mb-4.align-items-center
-    // Dropdown voor genres
+    // Dropdown for genres
     form(action="/movies", method="GET", class="me-2")
       .input-group
         label.input-group-text(for="genre-select") Genre
@@ -13,7 +13,7 @@ block content
           each genre in genres
             option(value=genre.category_id, selected=genre.category_id == selectedGenre)= genre.name
 
-    // Zoekformulier
+    // Search form
     form(action="/movies", method="GET", class="d-flex")
       input(
         type="search",
@@ -25,24 +25,27 @@ block content
       )
       button(class="btn btn-outline-success", type="submit") Search
 
-  // Verbetering van de weergave bij geen resultaten
+  // Improved movie display
   if movies.length > 0
-    .container
-      .row
+    .container-fluid
+      .row.row-cols-1.row-cols-sm-2.row-cols-md-3.row-cols-lg-4.g-4
         each movie in movies
-          .col-6.col-md-3.text-center
-            .movie-block
+          .col
+            .card.h-100.shadow-sm
               a(href=`/movies/${movie.film_id}`)
-                img(
+                img.card-img-top(
                   src=movie.imageUrl ? movie.imageUrl : "/images/filmfoto.jpg",
                   alt=movie.title,
-                  style="width:150px; height:225px; object-fit:cover;"
+                  style="height: 300px; object-fit: cover;"
                 )
-                p.mt-2= movie.title
+              .card-body.d-flex.flex-column.text-center
+                h5.card-title.text-truncate= movie.title
   else
-    p No movies found. Try another search.
+    .alert.alert-info.text-center(role="alert")
+      h4.alert-heading No movies found!
+      p Try a different search query.
 
-  // Paginatie, nu met First en Last knoppen
+  // Pagination, now with First and Last buttons
   if totalPages > 1
     nav.mt-4
       ul.pagination.justify-content-center
