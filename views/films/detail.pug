@@ -26,12 +26,14 @@ block content
             strong Genre: 
             | #{movie.genre_name}
 
-          // Voeg hier het formulier toe voor de "Add to Favorites" knop
-          form(action="/favorites/add", method="POST", style="display:inline-block;")
-            input(type="hidden", name="filmId", value=movie.film_id)
-            button.btn.btn-primary.mt-3(type="submit") Add to Favorites
-
-          // Back button
-          a.btn.btn-secondary.mt-3(href="/movies", style="margin-left: 10px;") ← Back to Movies
+          // Knoppen in een flexbox container om ze naast elkaar te zetten
+          .d-flex.align-items-center.mt-3.gap-2
+            // Voeg hier het formulier toe voor de "Add to Favorites" knop
+            // Back button
+            a.btn.btn-light(href="/movies") ← Back to Movies
+            
+            form(action="/favorites/add", method="POST")
+              input(type="hidden", name="filmId", value=movie.film_id)
+              button.btn.btn-primary(type="submit") Add to Favorites
   else
     p Movie details not found.

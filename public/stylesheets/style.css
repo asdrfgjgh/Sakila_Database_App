@@ -1,8 +1,41 @@
+/* Nieuwe stijl voor de body-tag om de achtergrond op de hele pagina te zetten */
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: url('https://images.pexels.com/photos/346529/pexels-photo-346529.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2') no-repeat center center fixed;
+  background-size: cover;
+  /* Voeg een semi-transparante overlay toe voor betere leesbaarheid */
+  background-color: rgba(0, 0, 0, 0.5); 
+  background-blend-mode: darken;
+  color: #fff; /* Maak de tekst wit voor beter contrast */
 }
 
+/* De rest van je CSS-code blijft hetzelfde */
+.nav-item .btn {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 400;
+  border-radius: 0.25rem;
+}
+
+.nav-item:not(:last-child) {
+  margin-right: 0.5rem;
+}
+
+/* Verbeterde stijl voor de waarschuwingsberichten */
+.alert {
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/* Stijlen voor de container binnenin de achtergrond */
+.content-container {
+  background-color: rgba(139, 128, 128, 0.85); /* Semi-transparante achtergrond voor de inhoud */
+  padding: 2rem;
+  padding-bottom: 5px;
+  padding-top: 10px;
+  border-radius: 0.5rem;
+}
+
+/* Omdat we de tekstkleur wit hebben gemaakt, moeten we de links aanpassen */
 a {
-  color: #00B7FF;
+  color: #007bff; /* Standaard linkkleur */
 }
