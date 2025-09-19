@@ -1,24 +1,22 @@
 // src/controllers/movie.controller.js
 
-const moviesDAO = require("../dao/moviesDAO");
-const categoriesDAO = require("../dao/categoriesDAO");
+const moviesService = require("../services/movie.services");
+const categoriesService = require("../services/categories.services"); // Importeer de service
 
 function getAllMovies(req, res, next) {
   const page = parseInt(req.query.page) || 1;
   const limit = 50;
-  const offset = (page - 1) * limit;
   const searchQuery = req.query.search || '';
   const selectedGenre = req.query.genre || '';
 
-  categoriesDAO.getAllCategories((err, genres) => {
+  // Roep de service-functie aan om de genres op te halen
+  categoriesService.getAllCategories((err, genres) => {
     if (err) return next(err);
 
-    // Controleer of de aanroep van getMoviesPaginated correct is
-    moviesDAO.getMoviesPaginated(limit, offset, searchQuery, selectedGenre, (err, data) => {
+    moviesService.getAllMovies(page, limit, searchQuery, selectedGenre, (err, data) => {
       if (err) return next(err);
 
-      const totalPages = Math.ceil(data.totalMovies / limit);
-      
+      const totalPages = data.totalPages;
       const pagesToShow = [];
       const maxPagesToShow = 3;
       const startPage = Math.max(1, page - Math.floor(maxPagesToShow / 2));
@@ -48,7 +46,7 @@ function getAllMovies(req, res, next) {
 
 function getMovieById(req, res, next) {
   const movieId = req.params.id;
-  moviesDAO.findMovieById(movieId, (err, movie) => {
+  moviesService.getMovieById(movieId, (err, movie) => {
     if (err) {
       return next(err);
     }
