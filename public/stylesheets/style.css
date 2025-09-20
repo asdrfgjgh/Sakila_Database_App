@@ -39,3 +39,10 @@ body {
 a {
   color: #007bff; /* Standaard linkkleur */
 }
+.hover-lift {
+  transition: transform 0.1s ease-in-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-10px); /* Schaalwaarde 1.05 maakt het 5% groter */
+}

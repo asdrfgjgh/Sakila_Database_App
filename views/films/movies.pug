@@ -31,7 +31,7 @@ block content
       .row.row-cols-1.row-cols-sm-2.row-cols-md-3.row-cols-lg-4.g-4
         each movie in movies
           .col
-            .card.h-100.shadow-sm
+            .card.h-100.shadow-sm.hover-lift
               a(href=`/movies/${movie.film_id}`)
                 img.card-img-top(
                   src=movie.imageUrl ? movie.imageUrl : "/images/filmfoto.jpg",
