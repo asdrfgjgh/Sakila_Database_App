@@ -1,8 +1,50 @@
 extends layouts/layout
 
 block content
-  h1 About
-  p This is the about page.
-  p User stories 
-  p Acceptatiecriteria
+  style.
+    li {
+      margin-bottom: 15px;
+    }
+
+  h1 Over de Sakila Film App
+
+  h2 User Stories en Acceptatiecriteria
+
+  p Deze applicatie is ontworpen om je te helpen makkelijk films te vinden en te beheren. De functies zijn gebaseerd op de volgende gebruikersverhalen:
+
+  ul
+    li
+      | Als klant wil ik films kunnen zoeken op titel en genre, zodat ik snel kan vinden wat ik wil kijken.
+      ul.acceptance-criteria
+        li
+          strong Acceptatiecriteria:
+        li De homepage moet een zoekbalk bevatten om films op titel te zoeken.
+        li De homepage moet een filtermenu voor genres hebben om de filmlijst te verfijnen.
+    li
+      | Als klant wil ik een account kunnen aanmaken, zodat ik films kan huren en mijn gegevens kan beheren.
+      ul.acceptance-criteria
+        li
+          strong Acceptatiecriteria:
+        li Er moet een registratiepagina zijn waar een nieuwe gebruiker een account kan aanmaken met een voornaam, achternaam, e-mailadres en wachtwoord.
+        li Het systeem moet voorkomen dat een account wordt aangemaakt als het e-mailadres al in gebruik is.
+    li
+      | Als klant wil ik kunnen inloggen, zodat ik toegang krijg tot mijn gehuurde films en mijn account.
+      ul.acceptance-criteria
+        li
+          strong Acceptatiecriteria:
+        li Er moet een inlogpagina zijn met velden voor e-mail en wachtwoord.
+        li Bij een succesvolle login moet ik worden doorgestuurd naar de hoofdpagina met films.
+        li Het systeem moet een foutmelding geven bij onjuiste inloggegevens.
+    li
+      | Als klant wil ik een film aan mijn favorietenlijst kunnen toevoegen, zodat ik een overzicht heb van films die ik later wil huren.
+      ul.acceptance-criteria
+        li
+          strong Acceptatiecriteria:
+        li Een gebruiker moet zijn ingelogd om een film aan favorieten toe te voegen.
+        li Er moet een knop of link op een filmpagina zijn om de film aan favorieten toe te voegen.
+        li Er moet een 'Favorieten'-pagina zijn die alle favoriete films van een gebruiker toont.
+
+  h2 Technische Documentatie
+
+  p Hieronder zie je een wireframe van de lay-out van de applicatie.
   iframe(src='/images/Sakila_wireframe.pdf', width='100%', height='600px')

@@ -41,20 +41,3 @@ block content
             form(action="/favorites/add", method="POST")
               input(type="hidden", name="filmId", value=movie.film_id)
               button.btn.btn-primary(type="submit") Add to Favorites
-
-    // Display the rental data for this movie
-    h3 Rental History
-    if rentals && rentals.length > 0
-      ul
-        each rental in rentals
-          li
-            p Rented to Customer ID #{rental.customer_id} on #{rental.rental_date.toISOString().substring(0, 10)}
-            if rental.return_date
-              p Returned on #{rental.return_date.toISOString().substring(0, 10)}
-            else
-              p Not yet returned
-    else
-      p This movie has not been rented yet.
-
-  else
-    p Movie details not found.
