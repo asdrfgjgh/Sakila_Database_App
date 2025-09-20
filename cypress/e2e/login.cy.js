@@ -20,10 +20,12 @@ describe('Registratie', () => {
     // Bezoek de registratiepagina
     cy.visit('/auth/register');
 
-    // Vul een e-mailadres in dat al bestaat in de database
-    cy.get('input[name="email"]').type('gebruiker@voorbeeld.nl');
-    cy.get('input[name="password"]').type('wachtwoord123');
-    cy.get('input[name="passwordConfirm"]').type('wachtwoord123');
+    // Vul de voornaam, achternaam, e-mail en wachtwoorden in
+    cy.get('input[name="first_name"]').type('Nieuwe');
+    cy.get('input[name="last_name"]').type('Gebruiker');
+    cy.get('input[name="email"]').type('gebruiker@voorbeeld.nl');
+    cy.get('input[name="password"]').type('wachtwoord123');
+    cy.get('input[name="passwordConfirm"]').type('wachtwoord123');
 
     // Klik op de registratieknop
     cy.get('button[type="submit"]').click();
@@ -39,6 +41,8 @@ describe('Registratie', () => {
     cy.visit('/auth/register');
 
     // Vul een e-mailadres in
+    cy.get('input[name="first_name"]').type('Nieuwe');
+    cy.get('input[name="last_name"]').type('Gebruiker');
     cy.get('input[name="email"]').type('nieuwe_gebruiker@voorbeeld.nl');
     
     // Vul verschillende wachtwoorden in
