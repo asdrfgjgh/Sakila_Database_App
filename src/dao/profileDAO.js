@@ -2,6 +2,13 @@
 
 const pool = require('../config/db');
 
+// ... (findUserById remains the same)
+
+/**
+ * Searches for a user based on their ID.
+ * @param {number} id - The user's ID.
+ * @param {function(Error|null, object|null)} callback - The callback function.
+ */
 function findUserById(id, callback) {
   pool.getConnection((err, connection) => {
     if (err) {
@@ -10,7 +17,7 @@ function findUserById(id, callback) {
     }
 
     const query = 'SELECT first_name, last_name, email FROM customer WHERE customer_id = ?';
-    
+
     connection.query(query, [id], (err, rows) => {
       connection.release();
 
@@ -19,13 +26,47 @@ function findUserById(id, callback) {
         return callback(err, null);
       }
 
-      // Geef de eerste rij terug (of null als er geen resultaat is)
       const user = rows.length > 0 ? rows[0] : null;
       callback(null, user);
     });
   });
 }
 
+// ----------------------------------------------------
+
+/**
+ * Updates a user's profile data (first name, last name, email).
+ * @param {number} id - The user's ID.
+ * @param {string} firstName - The new first name.
+ * @param {string} lastName - The new last name.
+ * @param {string} email - The new email address.
+ * @param {function(Error|null, object|null)} callback - The callback function.
+ */
+function updateUserProfile(id, firstName, lastName, email, callback) {
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error('Error while trying to connect:', err);
+      return callback(err);
+    }
+
+    const query = 'UPDATE customer SET first_name = ?, last_name = ?, email = ? WHERE customer_id = ?';
+    const values = [firstName, lastName, email, id];
+
+    connection.query(query, values, (err, result) => {
+      connection.release();
+
+      if (err) {
+        console.error('Error while updating profile data:', err);
+        return callback(err);
+      }
+
+      // Returns the result (number of affected rows)
+      callback(null, result);
+    });
+  });
+}
+
 module.exports = {
-  findUserById
+  findUserById,
+  updateUserProfile // EXPORT NEW FUNCTION
 };

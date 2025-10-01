@@ -1,0 +1,28 @@
+extends layouts/layout.pug
+
+block content
+    .container.mt-5
+        .row.justify-content-center
+            .col-md-6.col-lg-5
+                .card.shadow
+                    .card-body.p-4
+                        h2.card-title.text-center.mb-4 Edit Profile
+
+                        form(method="POST" action="/profile")
+                            .mb-3
+                                label.form-label(for="firstName") First Name
+                                // Gebruik 'value' om de huidige of ingevoerde data in te vullen
+                                input.form-control(type="text" id="firstName" name="firstName" value=user.first_name required)
+                            
+                            .mb-3
+                                label.form-label(for="lastName") Last Name
+                                input.form-control(type="text" id="lastName" name="lastName" value=user.last_name required)
+                            
+                            .mb-3
+                                label.form-label(for="email") E-mail Address
+                                input.form-control(type="email" id="email" name="email" value=user.email required)
+                            
+                            .mt-4.text-center
+                                // De Update knop die het formulier verstuurt
+                                button.btn.btn-primary.me-2(type="submit") Save Changes
+                                a.btn.btn-secondary(href="/profile") Cancel

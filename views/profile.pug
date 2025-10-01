@@ -1,24 +1,26 @@
 extends layouts/layout.pug
 
 block content
-  .container.mt-5
-    .row.justify-content-center
-      .col-md-6.col-lg-5
-        .card.shadow
-          .card-body.p-4
-            h2.card-title.text-center.mb-4 My Profile
-            
-            ul.list-group.list-group-flush
-              li.list-group-item
-                strong First name: 
-                | #{user.first_name}
-              li.list-group-item
-                strong Last name: 
-                | #{user.last_name}
-              li.list-group-item
-                strong E-mail: 
-                | #{user.email}
-            
-            .mt-4.text-center
-              a.btn.btn-secondary.me-2(href="/movies") Go Back
-              a.btn.btn-primary(href="/favorites") Go to Favorites
+    .container.mt-5
+        .row.justify-content-center
+            .col-md-6.col-lg-5
+                .card.shadow
+                    .card-body.p-4
+                        h2.card-title.text-center.mb-4 My Profile
+                        // -----------------------------------------------------
+
+                        ul.list-group.list-group-flush.mb-4
+                            li.list-group-item
+                                strong First name: 
+                                | #{user.first_name}
+                            li.list-group-item
+                                strong Last name: 
+                                | #{user.last_name}
+                            li.list-group-item
+                                strong E-mail: 
+                                | #{user.email}
+
+                        .mt-4.text-center
+                            a.btn.btn-secondary.me-2(href="/movies") Go Back
+                            a.btn.btn-info.me-2(href="/favorites") Go to Favorites
+                            a.btn.btn-primary(href="/profile/edit") Edit Profile
