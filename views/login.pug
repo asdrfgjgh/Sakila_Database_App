@@ -7,11 +7,6 @@ block content
         .card.shadow
           .card-body.p-4
             h2.card-title.text-center.mb-4 Log in
-            
-            // Dit blok toont een foutmelding als deze wordt meegegeven vanuit de server
-            if error && error.length > 0
-              .alert.alert-danger.text-center(role="alert")= error
-            
             // Inlogformulier
             form(action="/auth/login", method="POST")
               .mb-3
