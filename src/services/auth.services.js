@@ -1,9 +1,12 @@
 // services/auth.service.js
 const bcrypt = require('bcrypt');
-const authDAO = require('../dao/authDAO'); // Nu roepen we de DAO aan
+const authDAO = require('../dao/authDAO'); // Juiste pad naar de DAO met transactie
 const saltRounds = 10;
 
-
+/**
+ * Zoekt een gebruiker op basis van e-mail en vergelijkt het wachtwoord.
+ * (Deze functie blijft ongewijzigd, aangezien inloggen geen adresgegevens vereist).
+ */
 const findUserAndComparePassword = async (email, password) => {
     // 1. Database-actie (via DAO): Zoek gebruiker op
     const user = await authDAO.findUserByEmail(email);
@@ -23,6 +26,12 @@ const findUserAndComparePassword = async (email, password) => {
     }
 };
 
+/**
+ * Registreert een nieuwe gebruiker inclusief adresgegevens via een DAO-transactie.
+ * * @param {object} userData - Bevat first_name, last_name, email, password, 
+ * PLUS address, district, city_id, postal_code, phone.
+ * @returns {Promise<object>} Het resultaat van de customer insert.
+ */
 const registerNewUser = async (userData) => {
     const { email, password } = userData;
 
@@ -36,8 +45,10 @@ const registerNewUser = async (userData) => {
     // 2. Cryptografische logica (in Service): Hash het wachtwoord
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // 3. Database-actie (via DAO): Voeg de gebruiker toe
-    const result = await authDAO.insertNewUser({
+    // 3. Database-actie (via DAO): Voeg het adres en de gebruiker toe in één transactie.
+    // LET OP: We roepen de DAO-functie aan die de transactie afhandelt
+    // en geven ALLE benodigde data door (inclusief het gehashte wachtwoord en adresgegevens).
+    const result = await authDAO.registerNewUser({
         ...userData,
         hashedPassword,
     });

@@ -3,15 +3,25 @@ extends layouts/layout.pug
 block content
     .container.mt-5
         .row.justify-content-center
-            .col-md-6.col-lg-5
+            // Kolom verbreed om adresvelden beter te laten zien
+            .col-md-8.col-lg-7 
                 .card.shadow
                     .card-body.p-4
                         h2.card-title.text-center.mb-4 Edit Profile
 
                         form(method="POST" action="/profile")
+                            
+                            // 1. VERBORGEN ID'S: Cruciaal voor de DAO transactie
+                            // Deze ID's zijn opgehaald door profileDAO.findUserById
+                            input(type="hidden" name="addressId" value=user.address_id)
+                            
+                            // NIEUW: City ID wordt nu ook een VERBORGEN veld, zodat het wordt meegestuurd
+                            input(type="hidden" name="cityId" value=user.city_id)
+
+                            // --- PERSOONLIJKE GEGEVENS ---
+                            h5.mb-3 Personal Details
                             .mb-3
                                 label.form-label(for="firstName") First Name
-                                // Gebruik 'value' om de huidige of ingevoerde data in te vullen
                                 input.form-control(type="text" id="firstName" name="firstName" value=user.first_name required)
                             
                             .mb-3
@@ -22,7 +32,31 @@ block content
                                 label.form-label(for="email") E-mail Address
                                 input.form-control(type="email" id="email" name="email" value=user.email required)
                             
+                            // --- ADRESGEGEVENS ---
+                            h5.mt-4.mb-3 Address Details
+
+                            .mb-3
+                                label.form-label(for="address") Address
+                                input.form-control(type="text" id="address" name="address" value=user.address required)
+
+                            .mb-3
+                                label.form-label(for="district") District/State
+                                input.form-control(type="text" id="district" name="district" value=user.district required)
+
+                            // AANGEPASTE CITY VELD
+                            .mb-3
+                                label.form-label(for="cityNameDisplay") City
+                                // Toon de stadsnaam in een read-only veld
+                                input.form-control(type="text" id="cityNameDisplay" value=user.city required readonly)
+                                small.form-text.text-muted
+                            .mb-3
+                                label.form-label(for="postalCode") Postal Code
+                                input.form-control(type="text" id="postalCode" name="postalCode" value=user.postal_code required)
+                                
+                            .mb-3
+                                label.form-label(for="phone") Phone Number
+                                input.form-control(type="tel" id="phone" name="phone" value=user.phone required)
+
                             .mt-4.text-center
-                                // De Update knop die het formulier verstuurt
                                 button.btn.btn-primary.me-2(type="submit") Save Changes
                                 a.btn.btn-secondary(href="/profile") Cancel

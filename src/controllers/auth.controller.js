@@ -29,7 +29,6 @@ const getLogout = (req, res, next) => {
 const postLogin = (req, res) => {
     const { email, password } = req.body;
 
-    // We roepen de Service aan en gebruiken de Promise-keten (.then().catch())
     authService.findUserAndComparePassword(email, password)
         .then(user => {
             if (user) {
@@ -58,17 +57,29 @@ const postLogin = (req, res) => {
 };
 
 const postRegister = (req, res) => {
-    const { first_name, last_name, email, password, passwordConfirm } = req.body;
+    // Haal alle benodigde velden op, inclusief de adresgegevens
+    const { 
+        first_name, last_name, email, password, passwordConfirm, 
+        address, district, city_id, postal_code, phone 
+    } = req.body;
 
+    // --- Validatie: Wachtwoorden ---
     if (password !== passwordConfirm) {
         return res.status(400).render('register', {
             title: 'Register',
-            error: 'Passwords do not match.'
+            error: 'Passwords do not match.',
+            // Optioneel: geef ingevoerde velden terug aan de view
         });
     }
     
+    // --- Data voor de Service ---
+    const registrationData = {
+        first_name, last_name, email, password, 
+        address, district, city_id: parseInt(city_id), postal_code, phone 
+    };
+    
     // We roepen de Service aan en gebruiken de Promise-keten (.then().catch())
-    authService.registerNewUser({ first_name, last_name, email, password })
+    authService.registerNewUser(registrationData)
         .then(() => {
             // Registratie succesvol
             // req.flash('success_msg', 'Registration successful! You can now log in.'); 
@@ -77,7 +88,7 @@ const postRegister = (req, res) => {
         .catch(error => {
             console.error('Registratie fout:', error.message);
             
-            let errorMessage = 'Internal server error.';
+            let errorMessage = 'Internal server error during registration.';
             let statusCode = 500;
 
             // Afhandeling van bedrijfsfout (E-mail bestaat al)
@@ -85,10 +96,17 @@ const postRegister = (req, res) => {
                 errorMessage = error.message;
                 statusCode = 409; // Conflict
             }
+            
+            // Afhandeling van de transactiefout (van de DAO)
+            if (error.message.includes('transaction failed') || error.message.includes('Database Query Error')) {
+                 errorMessage = 'Registration failed due to a database error.';
+                 statusCode = 500;
+            }
 
             return res.status(statusCode).render('register', {
                 title: 'Register',
                 error: errorMessage
+                // Optioneel: geef ingevoerde velden terug aan de view, behalve het wachtwoord
             });
         });
 };

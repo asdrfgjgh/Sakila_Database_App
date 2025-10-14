@@ -3,12 +3,13 @@ extends layouts/layout.pug
 block content
     .container.mt-5
         .row.justify-content-center
-            .col-md-6.col-lg-5
+            .col-md-8.col-lg-7
                 .card.shadow
                     .card-body.p-4
                         h2.card-title.text-center.mb-4 My Profile
-                        // -----------------------------------------------------
-
+                        
+                        // --- ACCOUNT DETAILS ---
+                        h5.mb-3 Account Details
                         ul.list-group.list-group-flush.mb-4
                             li.list-group-item
                                 strong First name: 
@@ -20,6 +21,31 @@ block content
                                 strong E-mail: 
                                 | #{user.email}
 
+                        // --- ADDRESS DETAILS ---
+                        h5.mb-3 Address Details
+                        ul.list-group.list-group-flush.mb-4
+                            li.list-group-item
+                                strong Address: 
+                                // We gaan ervan uit dat de DAO de 'address' kolom teruggeeft
+                                | #{user.address}
+                            li.list-group-item
+                                strong District/State: 
+                                // We gaan ervan uit dat de DAO de 'district' kolom teruggeeft
+                                | #{user.district}
+                            li.list-group-item
+                                strong City: 
+                                // We gaan ervan uit dat de DAO de stadsnaam (city.city) heeft gekoppeld
+                                | #{user.city} 
+                            li.list-group-item
+                                strong Postal Code: 
+                                // We gaan ervan uit dat de DAO de 'postal_code' kolom teruggeeft
+                                | #{user.postal_code}
+                            li.list-group-item
+                                strong Phone: 
+                                // We gaan ervan uit dat de DAO de 'phone' kolom teruggeeft
+                                | #{user.phone}
+
+                        // --- BUTTONS ---
                         .mt-4.text-center
                             a.btn.btn-secondary.me-2(href="/movies") Go Back
                             a.btn.btn-info.me-2(href="/favorites") Go to Favorites

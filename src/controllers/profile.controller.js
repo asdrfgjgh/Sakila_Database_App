@@ -13,71 +13,84 @@ function getProfile(req, res, next) {
             return res.status(500).render('error', { message: 'Internal Server Error' });
         }
 
-        // Render the view with the fetched data
         res.render('profile', { title: 'My Profile', user: user });
     });
 }
 
-/**
- * Controller function to display the profile edit form.
- * This is the function that was missing!
- */
 function getEditProfile(req, res, next) {
     const customerId = req.session.userId;
 
     profileService.getProfileById(customerId, (err, user) => {
         if (err) {
-            // Error handling
             if (err.message === 'User not found') {
                 return res.status(404).render('error', { message: 'User not found.' });
             }
             return res.status(500).render('error', { message: 'Internal Server Error' });
         }
         
-        // Render the 'profile_edit.pug' view
+        // Render de 'profile_edit.pug' view. User bevat nu address_id, city_id, etc.
         res.render('profile_edit', { 
             title: 'Edit Profile', 
-            user: user // Pass the current data as initial values
+            user: user 
         });
     });
 }
 
 
 /**
- * Controller function to update a profile. (Existing function)
+ * Controller function to update a profile and address. 
+ * Haalt alle velden uit req.body en geeft ze gebundeld door aan de Service.
  */
 function updateProfile(req, res, next) {
     const customerId = req.session.userId;
-    const { firstName, lastName, email } = req.body;
+    
+    // 1. Haal ALLE 9 benodigde velden uit req.body (moeten overeenkomen met de formuliernamen)
+    const { 
+        firstName, lastName, email, 
+        address, district, cityId, postalCode, phone, 
+        addressId // Dit is het verborgen veld uit profile_edit.pug
+    } = req.body; 
 
-    if (!firstName || !lastName || !email) {
-        // On error: render the edit page again with an error message and the input data
+    // 2. Eenvoudige validatie voor essentiële velden
+    if (!firstName || !lastName || !email || !address || !cityId || !addressId) {
+        // Gebruik de ingevoerde data van req.body om het formulier opnieuw te vullen bij een fout
         return res.status(400).render('profile_edit', { 
             title: 'Edit Profile', 
-            error: 'All fields (First Name, Last Name, Email) are required.',
-            user: { first_name: firstName, last_name: lastName, email: email } 
+            error: 'All fields must be filled out, including address details.',
+            user: req.body // Gebruik req.body voor de foute invoer
         });
     }
 
-    profileService.updateProfileData(customerId, firstName, lastName, email, (err, result) => {
+    // 3. Bundel de data in één object voor de Service
+    const updateData = {
+        firstName, lastName, email,
+        address, 
+        district: district || null, // Sta district optioneel toe indien niet vereist in DB
+        cityId: parseInt(cityId), 
+        postalCode, phone,
+        addressId: parseInt(addressId)
+    };
+
+    // 4. Roep de Service aan met het gebundelde data-object
+    profileService.updateProfileData(customerId, updateData, (err, result) => {
         if (err) {
             let errorMessage = 'Error updating the profile.';
             if (err.message === 'Email already in use') {
-                 errorMessage = 'This email address is already in use.';
+                errorMessage = 'This email address is already in use.';
             } else if (err.message === 'User not found') {
                 return res.status(404).render('error', { message: 'User not found to update.' });
             }
 
-            // On error: render the edit page again with an error message
+            // On error: render de edit page opnieuw met de foutboodschap en de ingevoerde data
             return res.status(500).render('profile_edit', { 
                 title: 'Edit Profile', 
                 error: errorMessage,
-                user: { first_name: firstName, last_name: lastName, email: email }
+                user: req.body // Geef de oorspronkelijke foute input terug
             });
         }
 
         // Success!
-        req.session.successMessage = 'Your profile has been successfully updated!';
+        req.session.successMessage = 'Your profile and address have been successfully updated!';
         res.redirect('/profile'); 
     });
 }

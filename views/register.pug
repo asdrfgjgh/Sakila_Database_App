@@ -1,66 +1,141 @@
 extends layouts/layout.pug
 
 block content
-  .container.mt-5
-    .row.justify-content-center
-      .col-md-6.col-lg-5
-        .card.shadow
-          .card-body.p-4
-            h2.card-title.text-center.mb-4 Register
-            
-            // This block displays an error message if passed from the server
-            //- if error && error.length > 0
-            //-   .alert.alert-danger.text-center(role="alert")= error
-            
-            // Registration form
-            form(action="/auth/register", method="POST")
-              .mb-3
-                label.form-label(for="first_name") First Name
-                input.form-control(
-                  type="text",
-                  id="first_name",
-                  name="first_name",
-                  required
-                )
-              .mb-3
-                label.form-label(for="last_name") Last Name
-                input.form-control(
-                  type="text",
-                  id="last_name",
-                  name="last_name",
-                  required
-                )
-              .mb-3
-                label.form-label(for="email") E-mail Address
-                input.form-control(
-                  type="email",
-                  id="email",
-                  name="email",
-                  required,
-                  aria-describedby="emailHelp"
-                )
-                .form-text#emailHelp Enter a valid email address.
+    .container.mt-5
+        .row.justify-content-center
+            .col-md-8.col-lg-7
+                .card.shadow
+                    .card-body.p-4
+                        h2.card-title.text-center.mb-4 Register
+                        
+                        // Error message block (uncomment if using)
+                        //- if error && error.length > 0
+                        //-   .alert.alert-danger.text-center(role="alert")= error
+                        
+                        // Registration form
+                        form(action="/auth/register", method="POST")
+                            
+                            // === ACCOUNT DETAILS ===
+                            h5.mt-3.mb-3 Account Details
+                            .row 
+                                .col-md-6
+                                    .mb-3
+                                        label.form-label(for="first_name") First Name
+                                        input.form-control(
+                                            type="text",
+                                            id="first_name",
+                                            name="first_name",
+                                            required
+                                        )
+                                .col-md-6
+                                    .mb-3
+                                        label.form-label(for="last_name") Last Name
+                                        input.form-control(
+                                            type="text",
+                                            id="last_name",
+                                            name="last_name",
+                                            required
+                                        )
 
-              .mb-3
-                label.form-label(for="password") Password
-                input.form-control(
-                  type="password",
-                  id="password",
-                  name="password",
-                  required
-                )
+                            .mb-3
+                                label.form-label(for="email") E-mail Address
+                                input.form-control(
+                                    type="email",
+                                    id="email",
+                                    name="email",
+                                    required,
+                                    aria-describedby="emailHelp"
+                                )
+                                .form-text#emailHelp Enter a valid email address.
 
-              .mb-3
-                label.form-label(for="passwordConfirm") Confirm Password
-                input.form-control(
-                  type="password",
-                  id="passwordConfirm",
-                  name="passwordConfirm",
-                  required
-                )
+                            .row
+                                .col-md-6
+                                    .mb-3
+                                        label.form-label(for="password") Password
+                                        input.form-control(
+                                            type="password",
+                                            id="password",
+                                            name="password",
+                                            required
+                                        )
+                                .col-md-6
+                                    .mb-3
+                                        label.form-label(for="passwordConfirm") Confirm Password
+                                        input.form-control(
+                                            type="password",
+                                            id="passwordConfirm",
+                                            name="passwordConfirm",
+                                            required
+                                        )
+                            
+                            hr.my-4
 
-              button.btn.btn-primary.w-100(type="submit") Register
-            
-            hr.my-4
-            
-            p.text-center Already have an account? #[a(href="/auth/login") Log in here]
+                            // === ADDRESS DETAILS (Sakila Schema) ===
+                            h5.mb-3 Address Details
+                            
+                            .mb-3
+                                label.form-label(for="address") Street Address
+                                input.form-control(
+                                    type="text",
+                                    id="address",
+                                    name="address",
+                                    required
+                                )
+
+                            .row 
+                                .col-md-6
+                                    .mb-3
+                                        label.form-label(for="district") District / State
+                                        input.form-control(
+                                            type="text",
+                                            id="district",
+                                            name="district",
+                                            required
+                                        )
+                                .col-md-6
+                                    .mb-3
+                                        label.form-label(for="postal_code") Postal Code
+                                        input.form-control(
+                                            type="text",
+                                            id="postal_code",
+                                            name="postal_code",
+                                            required
+                                        )
+
+                            .row 
+                                .col-md-6
+                                    .mb-3
+                                        label.form-label(for="city_id") City
+                                        // AANPASSING: Gebruik een <select> element in plaats van een nummerveld
+                                        select.form-select(
+                                            id="city_id",
+                                            name="city_id",
+                                            required
+                                        )
+                                            option(value="", disabled, selected) Selecteer een stad
+                                            // Veld wordt gevuld met data van de Controller
+                                            // Ga ervan uit dat je een 'cities' variabele doorgeeft
+                                            if cities
+                                                each city in cities
+                                                    // De gebruiker ziet de naam, maar de waarde is de ID
+                                                    option(value=city.city_id)= city.city
+                                            else
+                                                // Fallback als de stedenlijst niet is doorgegeven
+                                                option(value="1") Placeholder City (ID 1)
+                                
+                                .col-md-6
+                                    .mb-3
+                                        label.form-label(for="phone") Phone Number
+                                        input.form-control(
+                                            type="tel",
+                                            id="phone",
+                                            name="phone",
+                                            required
+                                        )
+
+                            // --- Submit Button ---
+                            button.btn.btn-primary.w-100.mt-3(type="submit") Register
+                            
+                            hr.my-4
+                            
+                            p.text-center Already have an account? #[a(href="/auth/login") Log in here]
