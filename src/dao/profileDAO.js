@@ -2,13 +2,7 @@
 
 const pool = require('../config/db');
 
-// ... (findUserById remains the same)
 
-/**
- * Searches for a user based on their ID.
- * @param {number} id - The user's ID.
- * @param {function(Error|null, object|null)} callback - The callback function.
- */
 function findUserById(id, callback) {
   pool.getConnection((err, connection) => {
     if (err) {
@@ -32,16 +26,7 @@ function findUserById(id, callback) {
   });
 }
 
-// ----------------------------------------------------
 
-/**
- * Updates a user's profile data (first name, last name, email).
- * @param {number} id - The user's ID.
- * @param {string} firstName - The new first name.
- * @param {string} lastName - The new last name.
- * @param {string} email - The new email address.
- * @param {function(Error|null, object|null)} callback - The callback function.
- */
 function updateUserProfile(id, firstName, lastName, email, callback) {
   pool.getConnection((err, connection) => {
     if (err) {
@@ -60,7 +45,7 @@ function updateUserProfile(id, firstName, lastName, email, callback) {
         return callback(err);
       }
 
-      // Returns the result (number of affected rows)
+
       callback(null, result);
     });
   });
@@ -68,5 +53,5 @@ function updateUserProfile(id, firstName, lastName, email, callback) {
 
 module.exports = {
   findUserById,
-  updateUserProfile // EXPORT NEW FUNCTION
+  updateUserProfile 
 };
