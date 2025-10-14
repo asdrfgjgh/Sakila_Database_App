@@ -86,6 +86,5 @@ function updateProfile(req, res, next) {
 module.exports = {
     getProfile,
     updateProfile,
-    // This was the missing piece that caused the 404!
     getEditProfile 
 };
