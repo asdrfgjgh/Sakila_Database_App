@@ -90,8 +90,7 @@ const registerNewUserWithAddress = async (customerData) => {
             );
         }
         
-        // Let op: De fout van de database bevat nu hopelijk niet meer de 'location' melding, 
-        // maar een andere fout als de data incorrect is.
+
         console.error('DAO Transactie Fout:', error.message);
         throw new Error('Database transaction failed.');
 

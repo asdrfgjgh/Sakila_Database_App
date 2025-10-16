@@ -5,28 +5,28 @@ function getMoviesPaginated(limit, offset, searchQuery, selectedGenre, callback)
   let whereClauses = [];
   const params = [];
 
-  // JOIN om de categorie te kunnen filteren
+
   moviesQuery += ' LEFT JOIN film_category fc ON f.film_id = fc.film_id';
   moviesQuery += ' LEFT JOIN category c ON fc.category_id = c.category_id';
 
-  // Voeg een WHERE-clausule toe als er een zoekterm is
+
   if (searchQuery) {
     whereClauses.push('f.title LIKE ?');
     params.push(`%${searchQuery}%`);
   }
 
-  // Voeg een WHERE-clausule toe als er een genre is geselecteerd
+
   if (selectedGenre) {
     whereClauses.push('fc.category_id = ?');
     params.push(selectedGenre);
   }
 
-  // Combineer de WHERE-clausules
+
   if (whereClauses.length > 0) {
     moviesQuery += ' WHERE ' + whereClauses.join(' AND ');
   }
 
-  // Voeg LIMIT en OFFSET toe voor paginatie
+
   moviesQuery += ' ORDER BY f.title ASC LIMIT ? OFFSET ?';
   params.push(limit, offset);
 

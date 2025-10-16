@@ -26,12 +26,7 @@ const findUserAndComparePassword = async (email, password) => {
     }
 };
 
-/**
- * Registreert een nieuwe gebruiker inclusief adresgegevens via een DAO-transactie.
- * * @param {object} userData - Bevat first_name, last_name, email, password, 
- * PLUS address, district, city_id, postal_code, phone.
- * @returns {Promise<object>} Het resultaat van de customer insert.
- */
+
 const registerNewUser = async (userData) => {
     const { email, password } = userData;
 
@@ -45,9 +40,7 @@ const registerNewUser = async (userData) => {
     // 2. Cryptografische logica (in Service): Hash het wachtwoord
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // 3. Database-actie (via DAO): Voeg het adres en de gebruiker toe in één transactie.
-    // LET OP: We roepen de DAO-functie aan die de transactie afhandelt
-    // en geven ALLE benodigde data door (inclusief het gehashte wachtwoord en adresgegevens).
+
     const result = await authDAO.registerNewUser({
         ...userData,
         hashedPassword,
